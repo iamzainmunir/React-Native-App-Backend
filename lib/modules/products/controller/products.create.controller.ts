@@ -23,14 +23,15 @@ export default class ProductCreateController {
         const image_upload: any = await upload(req.files.image1.tempFilePath);
         if(!image_upload) throw image_upload;
 
-        image_url.push({ url: image_upload.url })
+        //console.log(image_upload)
+        image_url.push({ url: image_upload.url, thumbnailUrl: image_upload.thumbnailUrl })
       }
 
       if (req.files.image2) {
         const image_upload: any = await upload(req.files.image2.tempFilePath);
         if(!image_upload) throw image_upload;
 
-        image_url.push({ url: image_upload.url })
+        image_url.push({ url: image_upload.url, thumbnailUrl: image_upload.thumbnailUrl })
       }
 
 
@@ -38,7 +39,7 @@ export default class ProductCreateController {
         const image_upload: any = await upload(req.files.image3.tempFilePath);
         if(!image_upload) throw image_upload;
 
-        image_url.push({ url: image_upload.url })
+        image_url.push({ url: image_upload.url, thumbnailUrl: image_upload.thumbnailUrl })
       }
 
 
@@ -46,7 +47,7 @@ export default class ProductCreateController {
         const image_upload: any = await upload(req.files.image4.tempFilePath);
         if(!image_upload) throw image_upload;
 
-        image_url.push({ url: image_upload.url })
+        image_url.push({ url: image_upload.url, thumbnailUrl: image_upload.thumbnailUrl })
       }
 
 
@@ -54,7 +55,7 @@ export default class ProductCreateController {
         const image_upload: any = await upload(req.files.image5.tempFilePath);
         if(!image_upload) throw image_upload;
 
-        image_url.push({ url: image_upload.url })
+        image_url.push({ url: image_upload.url, thumbnailUrl: image_upload.thumbnailUrl })
       }
       
       const createProduct: any = {
@@ -90,7 +91,10 @@ export default class ProductCreateController {
 
 async function upload(FILE_PATH: string){
   try {
-    const image_upload = await cloudinary.uploader.upload(FILE_PATH);
+    const image_url = await cloudinary.uploader.upload(FILE_PATH);
+    const thumbnail_url = await cloudinary.uploader.upload(FILE_PATH, { transformation : [
+      {width: 100, height: 100, gravity: "face", crop: "thumb"}
+    ]})
 
     fs.unlink(FILE_PATH, (err: any) => {
       if (err) {
@@ -98,7 +102,7 @@ async function upload(FILE_PATH: string){
       }
     })
 
-    return image_upload;
+    return { url: image_url.url, thumbnailUrl: thumbnail_url.url };
   } catch (error) {
     return error
   }
