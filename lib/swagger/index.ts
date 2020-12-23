@@ -1,7 +1,9 @@
-const products = require("./products");
+const products = require("./products"),
+user = require("./user")
 
 let apis = {
-  ...products
+  ...products,
+  ...user
 };
 
 let configurations = {
@@ -14,33 +16,15 @@ let configurations = {
   produces: ["application/json"],
   basePath: "/api/v1",
   securityDefinitions: {
-    "auth-token": {
+    "x-auth-token": {
       type: "apiKey",
       in: "header",
       name: "token",
-    },
-    "auth-username": {
-      type: "apiKey",
-      in: "header",
-      name: "username",
-    },
-    "auth-user-id": {
-      type: "apiKey",
-      in: "header",
-      name: "user_id",
-    },
-    "auth-school-id": {
-      type: "apiKey",
-      in: "header",
-      name: "school_id",
-    },
+    }
   },
   security: [
     {
-      "auth-token": [],
-      "auth-username": [],
-      "auth-user-id": [],
-      "auth-school-id": [],
+      "x-auth-token": []
     },
   ],
   schemes: ["http", "https"],
