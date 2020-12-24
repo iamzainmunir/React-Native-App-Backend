@@ -86,7 +86,7 @@ module.exports = {
             }
         }
     },
-    "/user/{user_id}": {
+    "/user": {
         put: {
             tags: ["User"],
             summary: "It will login user",
@@ -95,12 +95,6 @@ module.exports = {
             consumes: ["application/json"],
             produces: ["application/json"],
             parameters: [
-                {
-                    in: "path",
-                    name: "user_id",
-                    schema: { type: "string", example: "<mongoose-object-id>" },
-                    description: "User id to update user",
-                },
                 {
                     in: "body",
                     name: "body",

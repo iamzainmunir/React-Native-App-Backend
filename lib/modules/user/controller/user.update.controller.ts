@@ -14,17 +14,14 @@ export default class UserUpdateController {
   public update = async (req: IRequest, res: Response) => {
       let required_field = [
         {
-            key: "user_id",
-            type: "mongoose-object-id",
-        },
-        {
             key: "notification_token",
-            type: "string"
+            type: "string",
+            optional: true 
         }
-      ],
-      reqBody = { ...req.params, ...req.body }
-    try {
-        const validate = await requireValidate(required_field, reqBody);
+      ]
+
+      try {
+        const validate = await requireValidate(required_field, req.body);
         if (validate.error) {
             throw {
               status: 400,
@@ -32,7 +29,7 @@ export default class UserUpdateController {
             };
         }
 
-        const user = await UserModel.findOne({ _id: validate.data.user_id });
+        const user = await UserModel.findOne({ _id: req.user.uid });
         if(!user){
             throw{
                 status: 404,
@@ -40,8 +37,11 @@ export default class UserUpdateController {
             }
         }
 
-        await UserModel.updateOne({ _id: validate.data.user_id }, {
-            $set: { notification_token: validate.data.notification_token }
+        let queryObject: any = {};
+        if(validate.data.notification_token) queryObject.notification_token = validate.data.notification_token;
+
+        await UserModel.updateOne({ _id: req.user.uid }, {
+            $set: queryObject
         })
 
         return res.status(200).send({

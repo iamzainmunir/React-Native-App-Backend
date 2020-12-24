@@ -16,7 +16,7 @@ export class UserRoutes {
         app.route(baseUrl + "/user/login")
             .post(loginUserController.login)
 
-        app.route(baseUrl + "/user/:user_id")
+        app.route(baseUrl + "/user")
             .put(authorization.authUser, userUpdateController.update)
 
     }
