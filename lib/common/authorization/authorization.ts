@@ -10,7 +10,6 @@ interface IRequest extends Request{
 export default class Authorization {
     public authUser = async (req: IRequest, res: Response, next: NextFunction) => {
         try{
-            console.log(req.headers)
             if(!req.headers["x-auth-token"]){
                 throw{
                     status: 401,

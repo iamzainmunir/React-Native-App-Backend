@@ -11,8 +11,6 @@ interface IRequest extends Request {
 export default class UserRegisterController {
   public create = async (req: IRequest, res: Response) => {
     try {
-
-      console.log(process.env.BCRYPTJS_SALT)
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
 
       const fetchUser: any = await UserModel.findOne({ email: req.body.email })
