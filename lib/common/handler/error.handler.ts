@@ -11,6 +11,11 @@ export default (object: any) => {
     }
   }
 
+  if(object.name === "JsonWebTokenError"){
+    object.status = 401,
+    object.message = "Invalid token provided"   
+  }
+
   
   return {
     status: object.status || 500,

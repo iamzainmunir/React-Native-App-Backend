@@ -19,7 +19,7 @@ let configurations = {
     "x-auth-token": {
       type: "apiKey",
       in: "header",
-      name: "token",
+      name: "x-auth-token",
     }
   },
   security: [

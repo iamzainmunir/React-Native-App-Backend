@@ -1,42 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
 import errorHandler from "../handler/error.handler";
 const requireDataValidate = require("../validation/require.validation");
+const jwt = require('jsonwebtoken');
+
 
 interface IRequest extends Request{
     user: any
 }
 export default class Authorization {
     public authUser = async (req: IRequest, res: Response, next: NextFunction) => {
-        let required_fields = [{
-            key: 'token',
-            type: 'string'
-        },{
-            key: 'username',
-            type: 'string',
-        },{
-            key: 'school_id',
-            type: 'mongoose-object-id'
-        },{
-            key: 'user_id',
-            type: 'mongoose-object-id',
-        }],
-        requestBody = {
-            token: req.headers['token'],
-            username: req.headers['username'],
-            school_id: req.headers['school_id'],
-            user_id: req.headers['user_id']
-        };
-
         try{
-            let validate = requireDataValidate(required_fields, requestBody);
-            if(validate.error){
-                throw {
-                    status: 400,
-                    message: validate.message
+            console.log(req.headers)
+            if(!req.headers["x-auth-token"]){
+                throw{
+                    status: 401,
+                    message: "You are not allowed to access this api"
                 }
             }
-
-            req.user = validate.data;
+            const decodeUser = jwt.verify(req.headers["x-auth-token"], process.env.JWT_SECRET)
+            req.user = decodeUser;
             next();
         }
         catch(err){
